@@ -16,7 +16,7 @@ This chemistryModel can be used in the latest OpenFOAM-dev (today is 4th July 20
 -lc_pyjac  
 ```
 ### revise `BasicChemistryModels.C`
-```#include "CCMChemistryModel.H"```
+```#include "pyJacChemistryModel.H"```
 `makeChemistryModelType` using `pyJacChemistryModel`
 ### revise `makeChemistrySolverTypes.H`
 ```

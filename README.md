@@ -8,7 +8,7 @@ This chemistryModel can be used in the latest OpenFOAM-dev (today is 4th July 20
 ```python -m pyjac.libgen --source_dir ./out --lang c -out $FOAM_USER_LIBBIN```
 
 ## compile
-### add this to options in the chemistryModel of OpenFOAM
+### add this to `options` in the `chemistryModel` of OpenFOAM
 ```
 -I$(path_to_where_you_generate_the_code)/pyJac/out \
 -I$(path_to_where_you_generate_the_code)/pyJac/out/jacobs \

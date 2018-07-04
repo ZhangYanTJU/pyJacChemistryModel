@@ -8,6 +8,7 @@ This chemistryModel can be used in the latest OpenFOAM-dev (today is 4th July 20
 ```python -m pyjac.libgen --source_dir ./out --lang c -out $FOAM_USER_LIBBIN```
 
 ## compile
+### put these two files in ``src/thermophysicalModels/chemistryModel/chemistryModel/pyJacChemistryModel``
 ### add this to `options` in the `chemistryModel` of OpenFOAM
 ```
 -I$(path_to_where_you_generate_the_code)/pyJac/out \
@@ -36,6 +37,8 @@ This chemistryModel can be used in the latest OpenFOAM-dev (today is 4th July 20
         add##pyJac##SS##Comp##Thermo##thermo##ConstructorTo##BasicChemistryModel\
 ##Comp##Table_; 
 ```
+### ``wmake`` the ``chemistryModel``
+
 ## Using
 `pyJacChemistryModel` is a depreived class of standardChemistryModel. We can choose it in the case through setting `method` to pyJac in `chemistryType` in `chemistryProperties`.
 When we change the chemical mechanism, we just need to generate the shared library and put it in the same place.

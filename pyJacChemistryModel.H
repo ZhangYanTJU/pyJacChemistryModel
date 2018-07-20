@@ -38,9 +38,9 @@ SourceFiles
 #define pyJacChemistryModel_H
 
 #include "StandardChemistryModel.H"
-#include "chemistryReductionMethod.H"
-#include "chemistryTabulationMethod.H"
-#include "OFstream.H"
+//#include "chemistryReductionMethod.H"
+//#include "chemistryTabulationMethod.H"
+//#include "OFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,14 +57,26 @@ class pyJacChemistryModel
     public StandardChemistryModel<ReactionThermo, ThermoType>
 {
     // Private Member Functions
-
+    
+        //- Solve the reaction system for the given time step
+        //  of given type and return the characteristic time
+        template<class DeltaTType>
+        scalar solve(const DeltaTType& deltaT);
+        
         //- Disallow copy constructor
         pyJacChemistryModel(const pyJacChemistryModel&);
 
         //- Disallow default bitwise assignment
         void operator=(const pyJacChemistryModel&);
 
+        
+protected:
 
+    // Protected data
+        //- Temporary mass fraction field
+        mutable scalarField y_;
+        
+        
 public:
 
     //- Runtime type information
@@ -86,17 +98,34 @@ public:
         virtual void derivatives
         (
             const scalar t,
-            const scalarField& c,
-            scalarField& dcdt
+            const scalarField& Y,
+            scalarField& dYdt
         ) const;
 
         virtual void jacobian
         (
             const scalar t,
-            const scalarField& c,
-            scalarField& dcdt,
+            const scalarField& Y,
+            scalarField& dYdt,
             scalarSquareMatrix& J
         ) const;
+        
+        //- Solve the reaction system for the given time step
+        //  and return the characteristic time
+        virtual scalar solve(const scalar deltaT);
+
+        //- Solve the reaction system for the given time step
+        //  and return the characteristic time
+        virtual scalar solve(const scalarField& deltaT);  
+
+        virtual void solve
+        (
+            scalarField &Y,
+            scalar& T,
+            scalar& p,
+            scalar& deltaT,
+            scalar& subDeltaT
+        ) const = 0;        
 };
 
 

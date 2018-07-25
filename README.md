@@ -1,5 +1,5 @@
 # pyJacChemistryModel
-This chemistryModel can be used in the latest OpenFOAM-dev (today is 4th July 2018).
+This chemistryModel can be used in the latest OpenFOAM-dev (today is 4th July 2018). Plus, OF-6 is OK.
 ## Prerequisites
 ### install [pyJac](https://github.com/SLACKHA/pyJac) .
 ### use pyJac to generate analytical Jacobians code with the language of `c` for giving chemical mechanism.

@@ -1,44 +1,37 @@
 # pyJacChemistryModel
-This chemistryModel can be used in the latest OpenFOAM-dev (today is 4th July 2018). Plus, OF-6 is OK.
-## Prerequisites
-### install [pyJac](https://github.com/SLACKHA/pyJac) .
-### use pyJac to generate analytical Jacobians code with the language of `c` for giving chemical mechanism.
-```python -m pyjac --lang c --last_species N2 --input grimech30.dat --thermo thermo30.dat --build_path ./out```
-### generate shared library
-```python -m pyjac.libgen --source_dir ./out --lang c -out $FOAM_USER_LIBBIN```
+This chemistryModel can be used in the latest OpenFOAM-dev (today is 4th July 2018). Besides, OF-6 is OK.
 
-## compile
-### put these two files in ``src/thermophysicalModels/chemistryModel/chemistryModel/pyJacChemistryModel``
-### add this to `options` in the `chemistryModel` of OpenFOAM
+## Prerequisites
+### install [optionLoop](https://github.com/SLACKHA/optionLoop).
+### install [pyJac](https://github.com/SLACKHA/pyJac).
+### generate analytical Jacobians code
+under the environment of OpenFOAM-6:
+
 ```
--I$(path_to_where_you_generate_the_code)/pyJac/out \
--I$(path_to_where_you_generate_the_code)/pyJac/out/jacobs \
--L$(FOAM_USER_LIBBIN) \    
--lc_pyjac  
+cd $WM_PROJECT_USER_DIR
+mkdir pyJac
+cp $FOAM_TUTORIALS/combustion/reactingFoam/RAS/SandiaD_LTS/chemkin/grimech30.dat pyJac
+cp $FOAM_TUTORIALS/combustion/reactingFoam/RAS/SandiaD_LTS/chemkin/thermo30.dat pyJac
+cd pyJac
+python -m pyjac --lang c --last_species N2 --input grimech30.dat --thermo thermo30.dat --build_path ./out
 ```
-### revise `BasicChemistryModels.C`
-```#include "pyJacChemistryModel.H"```
-`makeChemistryModelType` using `pyJacChemistryModel`
-### revise `makeChemistrySolverTypes.H`
+
+### generate shared library
+still in the ``pyJac`` directory:
 ```
-                                                                                \
-    typedef SS<pyJacChemistryModel<Comp, Thermo>> pyJac##SS##Comp##Thermo;      \
-                                                                                \
-    defineTemplateTypeNameAndDebugWithName                                      \
-    (                                                                           \
-        pyJac##SS##Comp##Thermo,                                                \
-        (#SS"<" + word(pyJacChemistryModel<Comp, Thermo>::typeName_()) + "<"    \
-        + word(Comp::typeName_()) + "," + Thermo::typeName() + ">>").c_str(),   \
-        0                                                                       \
-    );                                                                          \
-                                                                                \
-    BasicChemistryModel<Comp>::                                                 \
-        add##thermo##ConstructorToTable<pyJac##SS##Comp##Thermo>                \
-        add##pyJac##SS##Comp##Thermo##thermo##ConstructorTo##BasicChemistryModel\
-##Comp##Table_; 
+python -m pyjac.libgen --source_dir ./out --lang c -out $FOAM_USER_LIBBIN
 ```
-### ``wmake`` the ``chemistryModel``
+
+## ``wmake`` this pyJacChemistryModel lib
 
 ## Using
-`pyJacChemistryModel` is a depreived class of standardChemistryModel. We can choose it in the case through setting `method` to pyJac in `chemistryType` in `chemistryProperties`.
-When we change the chemical mechanism, we just need to generate the shared library and put it in the same place.
+```
+mkdir $FOAM_RUN
+run
+cp -r $FOAM_TUTORIALS/combustion/reactingFoam/RAS/SandiaD_LTS ./
+cd SandiaD_LTS
+foamDictionary -entry chemistryType.method -set pyJac constant/chemistryProperties
+sed -i '$a\libs ("libpyJacChemistryModel.so" );' system/controlDict
+foamCleanTutorials
+./Allrun
+```

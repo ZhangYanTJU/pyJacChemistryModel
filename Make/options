@@ -27,7 +27,7 @@ $(PLIBS) \
     -lODE \
     -lfiniteVolume \
     -lmeshTools \
-    /*-L$(FOAM_USER_LIBBIN) \
-    -lc_pyjac */\
     -lturbulenceModels \
-    -lcompressibleTurbulenceModels \    
+    -lcompressibleTurbulenceModels \   
+    -L$(FOAM_USER_LIBBIN) \
+    -lc_pyjac \    

@@ -26,9 +26,9 @@ python -m pyjac.libgen --source_dir ./out --lang c -out $FOAM_USER_LIBBIN
 
 ## Using
 ```
-mkdir $FOAM_RUN
+mkdir -p $FOAM_RUN
 run
-cp -r $FOAM_TUTORIALS/combustion/reactingFoam/RAS/SandiaD_LTS ./
+cp -r $FOAM_TUTORIALS/combustion/reactingFoam/RAS/SandiaD_LTS .
 cd SandiaD_LTS
 foamDictionary -entry chemistryType.method -set pyJac constant/chemistryProperties
 sed -i '$a\libs ("libpyJacChemistryModel.so" );' system/controlDict
